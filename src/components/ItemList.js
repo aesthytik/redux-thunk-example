@@ -18,18 +18,16 @@ class ItemList extends Component {
         }
 
         return (
-            <div>
                 {this.props.items.map((item) => (
                     <div key={item.id}>
                             <ListGroup>
-                                <ListGroupItem href={item.officialSite} header={`${item.name}`}>
+                                <ListGroupItem href={item.officialSite} header={item.name}>
                                     Rating: {item.rating.average}
                                     <span className="pull-xs-right">Premiered: {item.premiered}</span>
                                 </ListGroupItem>
                             </ListGroup>
                     </div>
                 ))}
-            </div>
         );
     }
 }
