@@ -23,7 +23,6 @@ Redux has three fundamental principles:
 - single source of truth
 
 The whole state of the application is stored in an object tree (within a single store). We can say that your state is described as a plain object. Think of it as a “model”, but that there are no setters. Because of this, different parts of the code cannot change the state.
-
 Also, a single state tree enables us to debug our application with ease.
 
 - state is read-only
