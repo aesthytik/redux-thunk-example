@@ -375,7 +375,7 @@ And that was all !
 ### Last words and other resources
 
 We now have an app that is fetching data asynchronously from an API, using React for our UI and Redux for managing
-the state of our application. I think this is a good starting point to start a personal project or a small project 
+the state of our application. I think this is a good starting point for a personal project or a small project 
 and also try some new technologies.
 
 This doesn't mean that Redux is the solution for every problem we face when writing apps in React or that Redux is a 
