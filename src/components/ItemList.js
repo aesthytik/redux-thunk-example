@@ -9,7 +9,7 @@ class ItemList extends Component {
     }
 
     render() {
-        if (this.props.hasErrored) {
+        if (this.props.hasError) {
             return <p>Sorry! There was an error loading the items</p>;
         }
 
@@ -32,15 +32,15 @@ class ItemList extends Component {
 ItemList.propTypes = {
     fetchData: PropTypes.func.isRequired,
     items: PropTypes.array.isRequired,
-    hasErrored: PropTypes.bool.isRequired,
+    hasError: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (state) => {
     return {
         items: state.items,
-        hasErrored: state.itemsHasErrored,
-        isLoading: state.itemsIsLoading
+        hasError: state.itemsHaveError,
+        isLoading: state.itemsAreLoading
     };
 };
 

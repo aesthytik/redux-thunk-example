@@ -1,13 +1,13 @@
-export function itemsHasErrored(bool) {
+export function itemsHaveError(bool) {
     return {
-        type: 'ITEMS_HAS_ERRORED',
+        type: 'ITEMS_HAVE_ERROR',
         hasErrored: bool
     };
 }
 
-export function itemsIsLoading(bool) {
+export function itemsAreLoading(bool) {
     return {
-        type: 'ITEMS_IS_LOADING',
+        type: 'ITEMS_ARE_LOADING',
         isLoading: bool
     };
 }
@@ -30,7 +30,7 @@ export function itemsFetchData(url) {
     // var init = { headers: headers };
 
     return (dispatch) => {
-        dispatch(itemsIsLoading(true));
+        dispatch(itemsAreLoading(true));
 
         fetch(url)
             .then((response) => {
@@ -38,13 +38,13 @@ export function itemsFetchData(url) {
                     throw Error(response.statusText);
                 }
 
-                dispatch(itemsIsLoading(false));
+                dispatch(itemsAreLoading(false));
 
                 return response;
             })
             .then((response) => response.json())
             //.then((response) => log(response))
             .then((items) => dispatch(itemsFetchDataSuccess(items)))
-            .catch(() => dispatch(itemsHasErrored(true)));
+            .catch(() => dispatch(itemsHaveError(true)));
     };
 }
