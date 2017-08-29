@@ -1,7 +1,7 @@
 {
-  "name": "dummys-guide-to-redux-and-thunk-react",
+  "name": "redux-with-react",
   "version": "1.0.0",
-  "description": "A Dummy's Guide to Redux and Thunk in React",
+  "description": "Fetch data from an API using React and Redux",
   "private": true,
   "scripts": {
     "build": "nwb build-react-app",

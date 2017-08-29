@@ -18,6 +18,7 @@ class ItemList extends Component {
         }
 
         return (
+            <div>
                 {this.props.items.map((item) => (
                     <div key={item.id}>
                             <ListGroup>
@@ -28,6 +29,7 @@ class ItemList extends Component {
                             </ListGroup>
                     </div>
                 ))}
+            </div>
         );
     }
 }
