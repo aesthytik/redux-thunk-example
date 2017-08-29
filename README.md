@@ -25,7 +25,7 @@ Redux has three fundamental principles:
 --* state is read-only
 --- In order to modify state in Redux actions have to be dispatched (passed through) to the store. An action is a plain JavaScript object that describes what happened, sending data from the application to the store. Every change is described only as an action in the app, so if something changed, we know why it did.
 --- An action will look like this:
---- ```
+```
     {
         type: 'ACTION_TYPE',
         action_value: string
