@@ -55,7 +55,7 @@ Redux has three fundamental principles:
 
     **Important:** Reducers do not store state, and they do not mutate state. You pass state to the reducer and the reducer will return state.
 
-    As a best practice, even though it's possible to have a single reducer that manages the transformation done by every action, it is better to use reducer composition - breaking down the reducer into multiple, smaller reducers, each of them handling a specific slice of the application state.
+As a best practice, even though it's possible to have a single reducer that manages the transformation done by every action, it is better to use reducer composition - breaking down the reducer into multiple, smaller reducers, each of them handling a specific slice of the application state.
 
 ### How it works
 
