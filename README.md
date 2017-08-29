@@ -18,13 +18,13 @@ For starters, there are several key concepts to understand: store, actions and a
 ### Principles
 
 Redux has three fundamental principles:
---* single source of truth
---- The whole state of the application is stored in an object tree (within a single store). We can say that your state is described as a plain object. Think of it as a “model”, but that there are no setters. Because of this, different parts of the code cannot change the state.
---- Also, a single state tree enables us to debug our application with ease.
+- single source of truth
+The whole state of the application is stored in an object tree (within a single store). We can say that your state is described as a plain object. Think of it as a “model”, but that there are no setters. Because of this, different parts of the code cannot change the state.
+Also, a single state tree enables us to debug our application with ease.
 
---* state is read-only
---- In order to modify state in Redux actions have to be dispatched (passed through) to the store. An action is a plain JavaScript object that describes what happened, sending data from the application to the store. Every change is described only as an action in the app, so if something changed, we know why it did.
---- An action will look like this:
+- state is read-only
+In order to modify state in Redux actions have to be dispatched (passed through) to the store. An action is a plain JavaScript object that describes what happened, sending data from the application to the store. Every change is described only as an action in the app, so if something changed, we know why it did.
+An action will look like this:
 ```
     {
         type: 'ACTION_TYPE',
@@ -32,10 +32,10 @@ Redux has three fundamental principles:
     }
 ```
 
---* changes are made with pure functions
---- In order to tie state and actions together, we write a function called a reducer that takes two parameters: an action, and a next state. This pure function has access to the current (soon to be previous) state, applies the passed-as-a-parameter action to that state, and finally it returns the desired next state.
---- Example of a reducers:
---- ```
+- changes are made with pure functions
+In order to tie state and actions together, we write a function called a reducer that takes two parameters: an action, and a next state. This pure function has access to the current (soon to be previous) state, applies the passed-as-a-parameter action to that state, and finally it returns the desired next state.
+Example of a reducers:
+```
     export function itemsAreLoading(state = false, action) {
         switch (action.type) {
             case 'ACTION_TYPE':
@@ -46,7 +46,7 @@ Redux has three fundamental principles:
     }   
 ```
 
---- **Important:** Reducers do not store state, and they do not mutate state. You pass state to the reducer and the reducer will return state.
+**Important:** Reducers do not store state, and they do not mutate state. You pass state to the reducer and the reducer will return state.
 
 ### How it works
 
@@ -365,10 +365,10 @@ the state of our application.
 If you not familiar with Javascript or even React, probably this was pretty weird for you (as it was and honestly 
 sometimes I still find React to be weird)
 
---* [Github repo](https://github.com/bradeac/using-redux-with-react)
---* [Redux docs](http://redux.js.org/)
---* [Redux video tutorial by Dan Abramov](https://egghead.io/courses/getting-started-with-redux)
---* [Redux Thunk](https://github.com/gaearon/redux-thunk)
---* [Great article with a nice real-life analogy of how Redux is important and helpful](http://almerosteyn.com/2016/08/redux-explained-again)
---* But that doesn't mean we have to we have to use Redux for everything from now on. [There's also a good read about this from Dan Abramov himself](https://medium.com/@dan_abramov/you-might-not-need-redux-be46360cf367)
+- [Github repo](https://github.com/bradeac/using-redux-with-react)
+- [Redux docs](http://redux.js.org/)
+- [Redux video tutorial by Dan Abramov](https://egghead.io/courses/getting-started-with-redux)
+- [Redux Thunk](https://github.com/gaearon/redux-thunk)
+- [Great article with a nice real-life analogy of how Redux is important and helpful](http://almerosteyn.com/2016/08/redux-explained-again)
+- But that doesn't mean we have to we have to use Redux for everything from now on. [There's also a good read about this from Dan Abramov himself](https://medium.com/@dan_abramov/you-might-not-need-redux-be46360cf367)
 
