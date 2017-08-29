@@ -21,11 +21,13 @@ For starters, there are several key concepts to understand: store, actions and a
 
 Redux has three fundamental principles:
 - single source of truth
+
 The whole state of the application is stored in an object tree (within a single store). We can say that your state is described as a plain object. Think of it as a “model”, but that there are no setters. Because of this, different parts of the code cannot change the state.
 
 Also, a single state tree enables us to debug our application with ease.
 
 - state is read-only
+
 In order to modify state in Redux actions have to be dispatched (passed through) to the store. An action is a plain JavaScript object that describes what happened, sending data from the application to the store. Every change is described only as an action in the app, so if something changed, we know why it did.
 
 An action will look like this:
@@ -37,6 +39,7 @@ An action will look like this:
 ```
 
 - changes are made with pure functions
+
 In order to tie state and actions together, we write a function called a reducer that takes two parameters: an action, and a next state. This pure function has access to the current (soon to be previous) state, applies the passed-as-a-parameter action to that state, and finally it returns the desired next state.
 
 Example of a reducers:
@@ -82,15 +85,16 @@ application and I will put here (almost) all the code of the app. Also a github 
 Our app will fetch (asynchronously) data that is retrieved by an API (we will assume the API is already built, deployed and
 working properly) and then display the fetched data.
 
-***Designing our state
+**Designing our state**
 
 In order for this application to work properly, our state needs to have 3 properties: `isLoading`, `hasError` and `items`.
 Normally you'll think that this means we'll also have 3 action creators, so 3 action creators, but no :). We need a 4th
 action creator which will call the other 3 action creators based on the status or our request to the API.
 
-***Action creators
+**Action creators**
 
 Let's have a look at the first 3 action creators:
+
 ```
     export function itemsHaveError(bool) {
         return {
@@ -155,12 +159,12 @@ look like this:
     }
 ```
 
-***Reducers
+**Reducers**
 
 Now that we have our action creators in place, let's start writing our reducers, that take the actions and return a new
 state.
 
-*** Note: All reducers will be called when an action is dispatched. Because of this we are returning the original state
+**Note:** All reducers will be called when an action is dispatched. Because of this we are returning the original state
 in each of our reducers. When an action is dispatched, not all the reducers will create new state. The one's that will
 not create a new state need to return the original state. So we use a `switch` statement to determine when the action type
 matches.
@@ -210,7 +214,7 @@ Now that we have the reducers created, let's combine them:
     });
 ```
 
-***Creating the store
+**Creating the store**
 
 Don't forget about including the Redux Thunk middleware.
 
@@ -228,7 +232,7 @@ Don't forget about including the Redux Thunk middleware.
     }
 ```
 
-***Using the store in our index.js
+**Using the store in our index.js**
 
 ```
     import React from 'react';
@@ -248,7 +252,7 @@ Don't forget about including the Redux Thunk middleware.
     );
 ```
 
-***Writing our React component which shows our fetched data
+**Writing our React component which shows our fetched data**
 
 Let's start by talking about what we are importing here.
 
