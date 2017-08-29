@@ -241,7 +241,7 @@ Don't forget about including the Redux Thunk middleware in the `configureStore.j
 
     import ItemList from './components/ItemList';
 
-    const store = configureStore(); // You can also pass in an initialState here
+    const store = configureStore();
 
     render(
         <Provider store={store}>
@@ -375,11 +375,11 @@ And that was all !
 ### Last words and other resources
 
 We now have an app that is fetching data asynchronously from an API, using React for our UI and Redux for managing
-the state of our application. I think this is a good starting point for someone who wants to write some personal
-project or small projects and wants to try some new technologies.
+the state of our application. I think this is a good starting point to start a personal project or a small project 
+and also try some new technologies.
 
-This doesn't mean that Redux is the solution for every problem we face when writing apps in React, as Dan Abramov
-himself clearly states in an interesting [article.](https://medium.com/@dan_abramov/you-might-not-need-redux-be46360cf367)
+This doesn't mean that Redux is the solution for every problem we face when writing apps in React or that Redux is a 
+a must-use in any Javascript written project, as Dan Abramov himself clearly states in an interesting [article.](https://medium.com/@dan_abramov/you-might-not-need-redux-be46360cf367)
 
 - [Github repo](https://github.com/bradeac/using-redux-with-react)
 - [Redux docs](http://redux.js.org/)
