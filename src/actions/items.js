@@ -1,7 +1,7 @@
 export function itemsHaveError(bool) {
     return {
         type: 'ITEMS_HAVE_ERROR',
-        hasErrored: bool
+        hasError: bool
     };
 }
 
@@ -19,16 +19,7 @@ export function itemsFetchDataSuccess(items) {
     };
 }
 
-export function log(items) {
-    console.log(items);
-}
-
 export function itemsFetchData(url) {
-    // var headers = new Headers();
-    // headers.append("Access-Control-Allow-Origin", "*");
-
-    // var init = { headers: headers };
-
     return (dispatch) => {
         dispatch(itemsAreLoading(true));
 
@@ -43,7 +34,6 @@ export function itemsFetchData(url) {
                 return response;
             })
             .then((response) => response.json())
-            //.then((response) => log(response))
             .then((items) => dispatch(itemsFetchDataSuccess(items)))
             .catch(() => dispatch(itemsHaveError(true)));
     };

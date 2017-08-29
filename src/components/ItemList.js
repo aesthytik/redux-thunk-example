@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
 import { itemsFetchData } from '../actions/items';
 
 class ItemList extends Component {
     componentDidMount() {
-        //this.props.fetchData('https://swapi.co/api/people');
-        this.props.fetchData('http://5826ed963900d612000138bd.mockapi.io/items');
+        this.props.fetchData('http://api.tvmaze.com/shows');
     }
 
     render() {
@@ -18,13 +18,18 @@ class ItemList extends Component {
         }
 
         return (
-            <ul>
+            <div>
                 {this.props.items.map((item) => (
-                    <li key={item.id}>
-                        {item.label}
-                    </li>
+                    <div key={item.id}>
+                            <ListGroup>
+                                <ListGroupItem href={item.officialSite} header={`${item.name}`}>
+                                    Rating: {item.rating.average}
+                                    <span className="pull-xs-right">Premiered: {item.premiered}</span>
+                                </ListGroupItem>
+                            </ListGroup>
+                    </div>
                 ))}
-            </ul>
+            </div>
         );
     }
 }

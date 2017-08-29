@@ -84,6 +84,9 @@ application and I will put here (almost) all the code of the app. Also a github 
 Our app will fetch (asynchronously) data that is retrieved by an API (we will assume the API is already built, deployed and
 working properly) and then display the fetched data.
 
+As an API, we will use TVmaze's public API and we will fetch all the shows they aired. Then, the app will display all the
+shows, toghether with their rating and premiere date.
+
 **Designing our state**
 
 In order for this application to work properly, our state needs to have 3 properties: `isLoading`, `hasError` and `items`.
@@ -98,7 +101,7 @@ Let's have a look at the first 3 action creators:
     export function itemsHaveError(bool) {
         return {
             type: 'ITEMS_HAVE_ERROR',
-            hasErrored: bool
+            hasError: bool
         };
     }
 
@@ -204,7 +207,7 @@ Now that we have the reducers created, let's combine them in our `index.js` in o
 
 ```
     import { combineReducers } from 'redux';
-    import { items, itemsHasErrored, itemsIsLoading } from './items';
+    import { items, itemsHaveError, itemsAreLoading } from './items';
 
     export default combineReducers({
         items,
@@ -303,7 +306,7 @@ arguments to `connect`. This connects our component to Redux.
 Finally, we will call this action creator in the `componentDidMount` lifecycle method:
 
 ```
-    this.props.fetchData('http://5826ed963900d612000138bd.mockapi.io/items');
+    this.props.fetchData('http://api.tvmaze.com/shows');
 ```
 
 Side note: if you are wondering why are we calling the action creator in componentDidMount instead of other 
@@ -318,11 +321,12 @@ like this:
 ```
     import React, { Component, PropTypes } from 'react';
     import { connect } from 'react-redux';
+    import { ListGroup, ListGroupItem } from 'react-bootstrap';
     import { itemsFetchData } from '../actions/items';
 
     class ItemList extends Component {
         componentDidMount() {
-            this.props.fetchData('http://5826ed963900d612000138bd.mockapi.io/items');
+            this.props.fetchData('http://api.tvmaze.com/shows');
         }
 
         render() {
@@ -335,13 +339,18 @@ like this:
             }
 
             return (
-                <ul>
+                <div>
                     {this.props.items.map((item) => (
-                        <li key={item.id}>
-                            {item.label}
-                        </li>
+                        <div key={item.id}>
+                                <ListGroup>
+                                    <ListGroupItem href={item.officialSite} header={`${item.name}`}>
+                                        Rating: {item.rating.average}
+                                        <span className="pull-xs-right">Premiered: {item.premiered}</span>
+                                    </ListGroupItem>
+                                </ListGroup>
+                        </div>
                     ))}
-                </ul>
+                </div>
             );
         }
     }
