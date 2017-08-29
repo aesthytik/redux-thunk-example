@@ -376,7 +376,7 @@ And that was all !
 
 We now have an app that is fetching data asynchronously from an API, using React for our UI and Redux for managing
 the state of our application. I think this is a good starting point for a personal project or a small project 
-and also try some new technologies.
+and also you get to work with new technologies.
 
 This doesn't mean that Redux is the solution for every problem we face when writing apps in React or that Redux is a 
 a must-use in any Javascript written project, as Dan Abramov himself clearly states in an interesting [article.](https://medium.com/@dan_abramov/you-might-not-need-redux-be46360cf367)
