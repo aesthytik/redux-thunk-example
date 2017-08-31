@@ -397,8 +397,8 @@ a must-use in any Javascript written project, as Dan Abramov states in an intere
 
 Also worth noting, Facebook are preparing [React Fiber](https://github.com/acdlite/react-fiber-architecture), a 
 reimplementation of React. They state that its goal is to make it more suitable for animations and gestures and 
-that the key new feature will be incremental rendering - >the ability to split rendering work into chunks and 
-spread it out over multiple frames.
+that the key new feature will be incremental rendering which is:
+> the ability to split rendering work into chunks and spread it out over multiple frames
 
 Other interesting technologies (which I'm currently looking into) would be [Relay](https://facebook.github.io/relay/)
 and [GraphQL](http://graphql.org/) and I will probably prepare some blog posts about these in the future. Stay tuned :)
