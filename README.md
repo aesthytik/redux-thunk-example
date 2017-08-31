@@ -23,11 +23,13 @@ For starters, there are several key concepts to understand: store, actions / act
 Redux has three fundamental principles:
 - single source of truth
 
-    The whole state of the application is stored in an object tree (within a single store). We can say that the state is described as a plain object. Think of it as a “model”, but that there are no setters. Also, a single state tree enables us to debug our application with ease.
+    The whole state of the application is stored in an object tree (within a single store). Visualize the state as a “model”,
+    but without setters. As a plus, a single state tree enables us to debug our application with ease.
 
 - state is read-only
 
-    In order to modify state in Redux, actions have to be dispatched (passed through) to the store. An action is a plain JavaScript object that describes what happened, sending data from the application to the store. Every change is described only as an action, so if something changed, we know why it did.
+    In order to modify state in Redux, actions have to be dispatched. Actions are a plain JavaScript object that describes what changed, sending data from the application to the store. 
+
 
     An action will look like this:
     ```
@@ -39,7 +41,7 @@ Redux has three fundamental principles:
 
 - changes are made with pure functions
 
-    In order to tie state and actions together, we write a function called a reducer that takes two parameters: the (soon to be previous) state and an action. This pure function has access to the current (soon to be previous) state, applies the passed-as-a-parameter action to that state, and finally it returns the desired next state.
+    In order to tie state and actions together, we write a function called a reducer that takes two parameters: the (soon to be previous) state and an action. This pure function applies the action to that state and returns the desired next state.
 
     Example of a reducer:
     ```
@@ -55,16 +57,16 @@ Redux has three fundamental principles:
 
     **Important:** Reducers do not store state, and they do not mutate state. You pass state to the reducer and the reducer will return state.
 
-As a best practice, even though it's possible to have a single reducer that manages the transformation done by every action, it is better to use reducer composition - breaking down the reducer into multiple, smaller reducers, each of them handling a specific slice of the application state.
+**Tip:** As a best practice, even though it's possible to have a single reducer that manages the transformation done by every action,it is better to use reducer composition - breaking down the reducer into multiple, smaller reducers, each of them handling a specific slice of the application state.
 
 ### How it works
 
-When one action is dispatched to the store, the combined reducer catches the action and sends it to each of the smaller reducers. Each smaller reducer examines what action was passed and dictates if and how to modify that part of state that it is responsible for, producing a new state. You will find an example of a combined reducer a bit later in the article.
+When one action is dispatched to the store, the combined reducer catches the action and sends it to each of the smaller reducers. Each smaller reducer examines what action was passed and dictates if and how to modify that part of state that it is responsible for,producing a new state. You will find an example of a combined reducer a bit later in the article.
 
 After each smaller reducer produces its corresponding next state, an updated state object will be saved in the store. 
 Because this is important, I'm mentioning again that the store is the single source of truth in our application. Therefore, when each action is run through the reducers, a new state is produced and saved in the store.
 
-Besides all of this, Redux comes up with another concept - action creators - which are functions that return actions. These are hooked up to React components and when interacting with your application, the action creators are invoked (for example in one 
+Besides all of this, Redux comes up with another concept - action creators - which are functions that return actions. These can be linked to React components and when interacting with your application, the action creators are invoked (for example in one 
 of the lifecycle methods) and create new actions that get dispatched to the store.
 
 ```
@@ -78,20 +80,20 @@ of the lifecycle methods) and create new actions that get dispatched to the stor
 
 ### Fetching data from an API
 
-Now onto our application. All of the above code examples were just dummy examples. We will dive into the code of our 
-application and I will put here (almost) all the code of the app. Also a github repo will be available at the end of the article.
+Now onto our application. All of the above code examples were just examples. We will dive into the code of our application 
+and I will put here (almost) all the code of the app. Also a github repo will be available at the end of the article.
 
 Our app will fetch (asynchronously) data that is retrieved by an API (we will assume the API is already built, deployed and
 working properly) and then display the fetched data.
 
-As an API, we will use TVmaze's public API and we will fetch all the shows they aired. Then, the app will display all the
+As an API, we will use TVmaze's public API and we will fetch all the shows they have aired. Then, the app will display all the
 shows, toghether with their rating and premiere date.
 
 **Designing our state**
 
 In order for this application to work properly, our state needs to have 3 properties: `isLoading`, `hasError` and `items`.
-Normally you'll think that this means we'll also have 3 actions, so 3 action creators, but we won't. We need a 4th
-action creator which will call the other 3 action creators based on the status or our request to the API.
+So we will have 3 action creators and an extra action creator where we will fetch the data and call the other 3 action 
+creators based on the status or our request to the API.
 
 **Action creators**
 
@@ -126,27 +128,27 @@ The first 2 action creators will receive a bool as an parameter and they will re
 the corresponding type.
 
 The last one will be called after the fetching was successful and will receive the fetched items as an parameter. This
-action creator will return an object with a property called `items` which will receive as value the array of items which
+action creator will return an object with a property called `items` that will receive as value the array of items which
 were passed as an argument. As a syntactic sugar of ES6, we can write just `items` instead if `items: items`.
 
 
 
-Out of the box, action creators don't know how to make asynchronous requests. That's where [Redux Thunk](https://github.com/gaearon/redux-thunk) comes in handy. In order to use Redux Thunk, we have to add it to our store 
-(the code of our store can be found later in this article).
+Out of the box, action creators don't know how to make asynchronous requests. That's where [Redux Thunk](https://github.com/gaearon/redux-thunk) comes in handy. Thunk allows us to have action creators that return a 
+function instead of an action. In order to use Redux Thunk, we have to add it to our store (the code of our store 
+can be found later in this article).
 
 
 
-Thunk allows us to have action creators that return a function instead of an action. Knowing these, our action creator will
-look like this:
+Knowing these, our action creator will look like this:
 
 ```
     export function itemsFetchData(url) {
         return (dispatch) => {
             dispatch(itemsAreLoading(true));
 
-            fetch(url)
+            axios.get(url)
                 .then((response) => {
-                    if (!response.ok) {
+                    if (response.status !== 200) {
                         throw Error(response.statusText);
                     }
 
@@ -154,25 +156,25 @@ look like this:
 
                     return response;
                 })
-                .then((response) => response.json())
-                .then((items) => dispatch(itemsFetchDataSuccess(items)))
+                .then((response) => dispatch(itemsFetchDataSuccess(response.data)))
                 .catch(() => dispatch(itemsHaveError(true)));
         };
     }
 ```
 
+For making the request to the API, I used [axios](https://github.com/mzabriskie/axios), which is a promise-based HTTP client. There is also [Fetch API](https://developer.mozilla.org/en/docs/Web/API/Fetch_API), an alternative that, if I know correctly, is 
+included in Chrome and probably other modern browsers.
+
 **Reducers**
 
-Now that we have our action creators in place, let's start writing our reducers
+Now that we have our action creators in place, let's start writing our reducers.
 
 
-**Note:** All reducers will be called when an action is dispatched. Because of this, we are returning the original state
-in each of our reducers. When an action is dispatched, not all the reducers will create new state. The one's that will
-not create a new state need to return the original state. So we use a `switch` statement to determine when the action type
-matches.
+All reducers will be called when an action is dispatched. Because of this, we are returning the original state
+in each of our reducers. When the action type matches, the reducer does what it has to do and returns a new slice of state.
+If not, the reducer returns the original state back.
 
-Each reducer takes 2 parameters: the (soon to be previous) state (what is after the `=` sign is a default value in case 
-state is undefined) and an action object:
+Each reducer takes 2 parameters: the (soon to be previous) state (`false` being a default value) and an action object:
 
 ```
     export function itemsHaveError(state = false, action) {
@@ -234,7 +236,7 @@ Don't forget about including the Redux Thunk middleware in the `configureStore.j
     }
 ```
 
-**Using the store in our root index.js**
+**Using the store in our root `index.js`**
 
 ```
     import React from 'react';
@@ -286,6 +288,9 @@ and returns the props object.
     };
 ```
 
+When we have a new `state`, the `props` in our component will change according to our new state.
+
+
 Also, we need to dispatch our imported action creator.
 
 ```
@@ -296,8 +301,8 @@ Also, we need to dispatch our imported action creator.
     };
 ```
 
-Now, in order to make these methods do something, when we export our component, we have to pass these methods as
-arguments to `connect`. This connects our component to Redux.
+Now, in order to make these methods actually do something, when we export our component, we have to pass these 
+methods as arguments to `connect`. This connects our component to Redux.
 
 ```
     export default connect(mapStateToProps, mapDispatchToProps)(ItemList);
@@ -339,11 +344,11 @@ like this:
             }
 
             return (
-                <div>
+                <div style={setMargin}>
                     {this.props.items.map((item) => (
                         <div key={item.id}>
-                                <ListGroup>
-                                    <ListGroupItem href={item.officialSite} header={`${item.name}`}>
+                                <ListGroup style={setDistanceBetweenItems}>
+                                    <ListGroupItem href={item.officialSite} header={item.name}>
                                         Rating: {item.rating.average}
                                         <span className="pull-xs-right">Premiered: {item.premiered}</span>
                                     </ListGroupItem>
@@ -388,7 +393,15 @@ the state of our application. I think this is a good starting point for a person
 and also you get to work with new technologies.
 
 This doesn't mean that Redux is the solution for every problem we face when writing apps in React or that Redux is a 
-a must-use in any Javascript written project, as Dan Abramov himself clearly states in an interesting [article.](https://medium.com/@dan_abramov/you-might-not-need-redux-be46360cf367)
+a must-use in any Javascript written project, as Dan Abramov states in an interesting [article.](https://medium.com/@dan_abramov/you-might-not-need-redux-be46360cf367)
+
+Also worth noting, Facebook are preparing [React Fiber](https://github.com/acdlite/react-fiber-architecture), a 
+reimplementation of React. They state that its goal is to make it more suitable for animations and gestures and 
+that the key new feature will be incremental rendering - >the ability to split rendering work into chunks and 
+spread it out over multiple frames.
+
+Other interesting technologies (which I'm currently looking into) would be [Relay](https://facebook.github.io/relay/)
+and [GraphQL](http://graphql.org/) and I will probably prepare some blog posts about these in the future. Stay tuned :)
 
 - [Github repo](https://github.com/bradeac/using-redux-with-react)
 - [Redux docs](http://redux.js.org/)
