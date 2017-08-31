@@ -401,7 +401,9 @@ that the key new feature will be incremental rendering which is:
 > the ability to split rendering work into chunks and spread it out over multiple frames
 
 Other interesting technologies (which I'm currently looking into) would be [Relay](https://facebook.github.io/relay/)
-and [GraphQL](http://graphql.org/) and I will probably prepare some blog posts about these in the future. Stay tuned :)
+and [GraphQL](http://graphql.org/) and I will probably prepare some blog posts about these in the future. 
+
+Stay tuned :)
 
 - [Github repo](https://github.com/bradeac/using-redux-with-react)
 - [Redux docs](http://redux.js.org/)
