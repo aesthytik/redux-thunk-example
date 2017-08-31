@@ -18,10 +18,10 @@ class ItemList extends Component {
         }
 
         return (
-            <div>
+            <div style={setMargin}>
                 {this.props.items.map((item) => (
                     <div key={item.id}>
-                            <ListGroup>
+                            <ListGroup style={setDistanceBetweenItems}>
                                 <ListGroupItem href={item.officialSite} header={item.name}>
                                     Rating: {item.rating.average}
                                     <span className="pull-xs-right">Premiered: {item.premiered}</span>
@@ -33,6 +33,14 @@ class ItemList extends Component {
         );
     }
 }
+
+var setMargin = {
+    padding: "0px 200px 20px 200px"
+};
+
+var setDistanceBetweenItems = {
+    marginBottom: "5px"
+};
 
 ItemList.propTypes = {
     fetchData: PropTypes.func.isRequired,

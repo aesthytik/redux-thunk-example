@@ -25,37 +25,17 @@ export function itemsFetchData(url) {
     return (dispatch) => {
         dispatch(itemsAreLoading(true));
 
-        // axios.get(url)
-        //     .then((response) => {
-        //         console.log("response", response.status);
-        //         if (response.status !== 200) {
-        //             throw Error(response.statusText);
-        //         }
+        axios.get(url)
+            .then((response) => {
+                if (response.status !== 200) {
+                    throw Error(response.statusText);
+                }
 
-        //         dispatch(itemsAreLoading(false));
+                dispatch(itemsAreLoading(false));
 
-        //         return response;
-        //     })
-        //     //.then((response) => { console.log(response)})
-        //     //.then((response) => response.data.json())
-        //     .then((response) => { console.log(response.data)})
-        //     .then((response) => dispatch(itemsFetchDataSuccess(response.data)))
-        //     .catch(() => dispatch(itemsHaveError(true)));
-
-         fetch(url)
-             .then((response) => {
-                    console.log("response", response);
-                 if (!response.ok) {
-                     throw Error(response.statusText);
-                 }
-
-                 dispatch(itemsAreLoading(false));
-
-                 return response;
-             })
-             //.then((response) => { console.log(response.json())})
-             .then((response) => response.json())
-             .then((items) => dispatch(itemsFetchDataSuccess(items)))
-             .catch(() => dispatch(itemsHaveError(true)));
+                return response;
+            })
+            .then((response) => dispatch(itemsFetchDataSuccess(response.data)))
+            .catch(() => dispatch(itemsHaveError(true)));
     };
 }
