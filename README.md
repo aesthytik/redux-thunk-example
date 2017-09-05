@@ -1,9 +1,9 @@
 ---
 layout: post
-title: Redux with React
-subtitle: Intro into Redux. How to fetch data from an API
+title: Redux intro. How to use with React
+subtitle: How to fetch data from an API
 category: dev
-tags: [javascript, react, redux, web, asynchronous]
+tags: [javascript, react, redux, web]
 author: Camil Bradea
 author_email: camil.bradea@haufe-lexware.com 
 header-img: ""
@@ -80,20 +80,20 @@ of the lifecycle methods) and create new actions that get dispatched to the stor
 
 ### Fetching data from an API
 
-Now onto our application. All of the above code examples were just examples. We will dive into the code of our application 
-and I will put here (almost) all the code of the app. Also a github repo will be available at the end of the article.
+Now onto our application. All of the above code examples were just examples. We will dive into the important bits of the 
+code. Also, a github repo will be available at the end of the article, containing the entire app.
 
-Our app will fetch (asynchronously) data that is retrieved by an API (we will assume the API is already built, deployed and
-working properly) and then display the fetched data.
+Our app will fetch (asynchronously) data that is retrieved by an API - we already built and deployed a working API, 
+how convenient :) - and then display the fetched data as nice as my designing skills go (not too far).
 
-As an API, we will use TVmaze's public API and we will fetch all the shows they have aired. Then, the app will display all the
-shows, toghether with their rating and premiere date.
+TVmaze's public API contains a tonne of data and we will fetch all the shows they have ever aired. Then, the app will display 
+all the shows, toghether with their rating and premiere date.
 
 **Designing our state**
 
 In order for this application to work properly, our state needs to have 3 properties: `isLoading`, `hasError` and `items`.
 So we will have 3 action creators and an extra action creator where we will fetch the data and call the other 3 action 
-creators based on the status or our request to the API.
+creators based on the status or our request to the API. More details on why are we doing this, a bit later.
 
 **Action creators**
 
@@ -122,24 +122,44 @@ Let's have a look at the first 3 action creators:
     }
 ```
 
-Firstly, we use the `export` keyword so that we can use our action creators anywhere in our codebase.
 
 The first 2 action creators will receive a bool as an parameter and they will return an object with that bool value and
 the corresponding type.
 
 The last one will be called after the fetching was successful and will receive the fetched items as an parameter. This
 action creator will return an object with a property called `items` that will receive as value the array of items which
-were passed as an argument. As a syntactic sugar of ES6, we can write just `items` instead if `items: items`.
+were passed as an argument. Instead if `items: items`, we can write just `items`, using an ES6 syntactic sugar called 
+[property shorthand](http://es6-features.org/#PropertyShorthand).
+
+
+To visualize a bit what was described earlier, this is how it looks in [Redux DevTools](https://github.com/zalmoxisus/redux-devtools-extension):
+
+![](redux_devtools_action_creators.png)
 
 
 
-Out of the box, action creators don't know how to make asynchronous requests. That's where [Redux Thunk](https://github.com/gaearon/redux-thunk) comes in handy. Thunk allows us to have action creators that return a 
-function instead of an action. In order to use Redux Thunk, we have to add it to our store (the code of our store 
-can be found later in this article).
+Out of the box, action creators can return just actions. That's where [Redux Thunk](https://github.com/gaearon/redux-thunk) comes in handy. Thunk allows us to have action creators that return a function instead of an action and also, dispatch an action only in certain cases. 
 
 
+If it wasn't been for Redux Thunk, we would probably ended up having just one action creator, something like this:
 
-Knowing these, our action creator will look like this:
+```
+
+    export function itemsFetchData(url) {
+        const items = axios.get(url);
+
+        return {
+            type: 'ITEMS_FETCH_DATA',
+            items
+        };
+    }
+
+```
+
+Obviously, it would be a lot harder in this scenario to know if the items are still loading or checking if we have an error.
+
+
+Knowing these and using Redux Thunk, our action creator will be:
 
 ```
     export function itemsFetchData(url) {
@@ -162,19 +182,15 @@ Knowing these, our action creator will look like this:
     }
 ```
 
-For making the request to the API, I used [axios](https://github.com/mzabriskie/axios), which is a promise-based HTTP client. There is also [Fetch API](https://developer.mozilla.org/en/docs/Web/API/Fetch_API), an alternative that, if I know correctly, is 
-included in Chrome and probably other modern browsers.
-
 **Reducers**
 
 Now that we have our action creators in place, let's start writing our reducers.
 
 
-All reducers will be called when an action is dispatched. Because of this, we are returning the original state
-in each of our reducers. When the action type matches, the reducer does what it has to do and returns a new slice of state.
-If not, the reducer returns the original state back.
+All reducers will be called when an action is dispatched. Because of this, we are returning the original state in each of our reducers. When the action type matches, the reducer does what it has to do and returns a new slice of state. If not, the 
+reducer returns the original state back.
 
-Each reducer takes 2 parameters: the (soon to be previous) state (`false` being a default value) and an action object:
+Each reducer takes 2 parameters: the (soon to be previous) slice of state and an action object:
 
 ```
     export function itemsHaveError(state = false, action) {
@@ -205,7 +221,7 @@ Each reducer takes 2 parameters: the (soon to be previous) state (`false` being 
     }
 ```
 
-Now that we have the reducers created, let's combine them in our `index.js` in our `reducers` folder:
+Now that we have the reducers created, let's combine them in our `index.js` from our `reducers` folder:
 
 ```
     import { combineReducers } from 'redux';
@@ -301,6 +317,10 @@ Also, we need to dispatch our imported action creator.
     };
 ```
 
+With this one, we have access to our `itemFetchData` action creator through our `props` object. This way, we can call
+our action creator by doing `this.props.fetchData(url);`
+
+
 Now, in order to make these methods actually do something, when we export our component, we have to pass these 
 methods as arguments to `connect`. This connects our component to Redux.
 
@@ -320,8 +340,31 @@ lifecycle methods, I have found a couple of good reasons [here](https://tylermcg
 
 > Fiber, the next implementation of React’s reconciliation algorithm, will have the ability to start and stop rendering as needed for performance benefits. One of the trade-offs of this is that componentWillMount, the other lifecycle event where it might make sense to make an AJAX request, will be “non-deterministic”. What this means is that React may start calling componentWillMount at various times whenever it feels like it needs to. This would obviously be a bad formula for AJAX requests.
 
-Besides this, we need some validations and the actual iteration over our fetched data array. At the end, our component will look
-like this:
+Besides this, we need some validations:
+
+
+```
+    if (this.props.hasError) {
+        return <p>Sorry! There was an error loading the items</p>;
+    }
+
+    if (this.props.isLoading) {
+        return <p>Loading…</p>;
+    }
+```
+
+
+And the actual iteration over our fetched data array:
+
+
+```
+    {this.props.items.map((item) => (
+        // display data here
+    ))}
+```
+
+
+In the end, our component will look like this:
 
 ```
     import React, { Component, PropTypes } from 'react';
@@ -389,8 +432,8 @@ And that was all !
 ### Last words and other resources
 
 We now have an app that is fetching data asynchronously from an API, using React for our UI and Redux for managing
-the state of our application. I think this is a good starting point for a personal project or a small project 
-and also you get to work with new technologies.
+the state of our application. I think this is a good starting point for a personal / small project and also you get 
+to work with new technologies.
 
 This doesn't mean that Redux is the solution for every problem we face when writing apps in React or that Redux is a 
 a must-use in any Javascript written project, as Dan Abramov states in an interesting [article.](https://medium.com/@dan_abramov/you-might-not-need-redux-be46360cf367)
@@ -401,12 +444,12 @@ that the key new feature will be incremental rendering which is:
 > the ability to split rendering work into chunks and spread it out over multiple frames
 
 Other interesting technologies (which I'm currently looking into) would be [Relay](https://facebook.github.io/relay/)
-and [GraphQL](http://graphql.org/) and I will probably prepare some blog posts about these in the future. 
+and [GraphQL](http://graphql.org/). Maybe I'll also write something about those. Stay tuned :)
 
-Stay tuned :)
+### Resources
 
 - [Github repo](https://github.com/bradeac/using-redux-with-react)
 - [Redux docs](http://redux.js.org/)
 - [Redux video tutorial by Dan Abramov](https://egghead.io/courses/getting-started-with-redux)
 - [Redux Thunk](https://github.com/gaearon/redux-thunk)
-- [Great article with a nice real-life analogy of how Redux is important and helpful](http://almerosteyn.com/2016/08/redux-explained-again)
+- [Great article with a nice real-life analogy of why Redux is important and helpful](http://almerosteyn.com/2016/08/redux-explained-again)
