@@ -142,7 +142,7 @@ were passed as an argument. Instead if `items: items`, we can write just `items`
 
 To visualize a bit what was described earlier, this is how it looks in [Redux DevTools](https://github.com/zalmoxisus/redux-devtools-extension):
 
-![](redux_devtools_action_creators.png)
+![](/images/intro-redux/redux_devtools_action_creators.PNG)
 
 
 
