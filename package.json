@@ -4,8 +4,9 @@
   "description": "Fetch data from an API using React and Redux",
   "private": true,
   "scripts": {
-    "build": "parcel build ./src/index.html",
-    "start": "parcel ./src/index.html"
+    "build": "nwb build-react-app",
+    "clean": "nwb clean-app",
+    "start": "nwb serve-react-app"
   },
   "dependencies": {
     "axios": "^0.16.2",
